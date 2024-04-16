@@ -33,13 +33,20 @@
 # This implementation uses curses to plot the ant's movement in a terminal window (e.g. xterm)
 # It should run on most unixy OSes and maybe on others if you install the right bits.
 # Make your terminal window as large as possible.
+#
+# Usage:
+#	LangtonsAnt.py [-d delay]
 
+import sys
+import getopt
 import time
 import curses
 
+usage = 'Usage: LangtonsAnt.py [-d delay]\n'
+
 grid = {}				# True = black, False = white
 ant_dir = 0				# 0 = east, 1 = south, 2 = west, 3 = north
-ant_pos = (0, 0)		# 
+ant_pos = (0, 0)		# Initial position in the "infinite" grid
 grid[ant_pos] = False	# The ant's initial square is white. Initialisation avoids a try..except
 
 offx = 0				# These are calculated from the window size so that the ant starts in the centre.
@@ -49,6 +56,23 @@ dir_char = ['E', 'S', 'W', 'N']		# The ant is represented at each tick by a char
 
 use_curses = True		# Set to False to get a log of the moves instead of a TUI image.
 delay = 0.01			# Choose the tick interval. Real numbers are allowed.
+
+try:
+	(opts, args) = getopt.gnu_getopt(sys.argv[1:], "hd:", ["help", "delay="])
+except getopt.GetoptError as err:
+	# print help information and exit
+	print()
+	print(err)  # will print something like "option -a not recognized"
+	print(usage)
+	exit(1)
+
+for (opt, optarg) in opts:
+	if opt == '-h' or opt == '--help':
+		print()
+		print(usage)
+		exit(0)
+	if opt == '-d' or opt == '--delay':
+		delay = float(optarg)
 
 if use_curses:
 	window = curses.initscr()
@@ -80,7 +104,7 @@ def NextPos(pos, d):
 
 while True:
 
-	old_pos = ant_pos	
+	old_pos = ant_pos
 	ant_pos = NextPos(ant_pos, ant_dir)
 
 	try:
