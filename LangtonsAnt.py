@@ -64,7 +64,6 @@ if use_curses:
 	offy = maxyx[0] // 2
 	window.addch(offy, offx, dir_char[ant_dir])
 	window.refresh()
-	time.sleep(delay)
 
 def NextPos(pos, d):
 	x = pos[0]
@@ -106,14 +105,20 @@ while True:
 
 	# Update the grid
 	if use_curses:
+		time.sleep(delay);
 		if old_colour:
 			ch = '*'
 		else:
 			ch = ' '
-		window.addch(old_pos[1] + offy, old_pos[0] + offx, ch)
-		window.addch(ant_pos[1] + offy, ant_pos[0] + offx, dir_char[ant_dir])
-		window.refresh()
+		try:
+			window.addch(old_pos[1] + offy, old_pos[0] + offx, ch)
+			window.addch(ant_pos[1] + offy, ant_pos[0] + offx, dir_char[ant_dir])
+			window.refresh()
+		except:
+			window.addstr(0, 0, 'Langton\'s Ant hit a brick wall :-)')
+			window.addstr(1, 0, '')
+			window.refresh()
+			break
 	else:
 		print(old_pos, old_colour, ant_pos, dir_char[ant_dir])
 
-	time.sleep(delay);
