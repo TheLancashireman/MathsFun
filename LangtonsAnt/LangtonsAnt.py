@@ -25,7 +25,7 @@
 # If the new square is white, the ant turns 90 degrees right.
 # If the new square is black, the ant turns 90 degrees left.
 #
-# To start with, all squares are white.
+# By default, all squares are white.
 #
 # Professor Stewart's Cabinet of Mathematical Curiosities, page 141
 # See also: https://en.wikipedia.org/wiki/Langton%27s_ant
@@ -35,7 +35,7 @@
 # Make your terminal window as large as possible.
 #
 # Usage:
-#	LangtonsAnt.py [-d delay]
+#	LangtonsAnt.py [-d delay] [-p presets]
 
 import sys
 import getopt
@@ -53,12 +53,13 @@ offx = 0				# These are calculated from the window size so that the ant starts i
 offy = 0
 
 dir_char = ['E', 'S', 'W', 'N']		# The ant is represented at each tick by a character showing its direction
+presets_file = None					# Filename of presets file (-p option)
 
 use_curses = True		# Set to False to get a log of the moves instead of a TUI image.
 delay = 0.01			# Choose the tick interval. Real numbers are allowed.
 
 try:
-	(opts, args) = getopt.gnu_getopt(sys.argv[1:], "hd:", ["help", "delay="])
+	(opts, args) = getopt.gnu_getopt(sys.argv[1:], 'hd:p:', ['help', 'delay=', 'presets='])
 except getopt.GetoptError as err:
 	# print help information and exit
 	print()
@@ -73,6 +74,8 @@ for (opt, optarg) in opts:
 		exit(0)
 	if opt == '-d' or opt == '--delay':
 		delay = float(optarg)
+	if opt == '-p' or opt == '--presets':
+		presets_file = optarg
 
 if use_curses:
 	window = curses.initscr()
@@ -88,6 +91,24 @@ if use_curses:
 	offy = maxyx[0] // 2
 	window.addch(offy, offx, dir_char[ant_dir])
 	window.refresh()
+
+if presets_file != None:
+	f = open(presets_file, 'r')
+	for l in f:
+		l = l.rstrip().lstrip()
+		if l == '' or l[0] == '#':
+			pass	# Ignore comment lines and blank lines
+		else:
+			coords = l.split(' ')
+			pos = (int(coords[0]), int(coords[1]))
+#			print('pos = ', pos)		#DEBUG
+			grid[pos] = True
+			if use_curses:
+				window.addch(offy - pos[1], offx + pos[0], '*')
+				window.refresh()
+	f.close()
+	time.sleep(1)
+
 
 def NextPos(pos, d):
 	x = pos[0]
@@ -135,13 +156,15 @@ while True:
 		else:
 			ch = ' '
 		try:
-			window.addch(old_pos[1] + offy, old_pos[0] + offx, ch)
-			window.addch(ant_pos[1] + offy, ant_pos[0] + offx, dir_char[ant_dir])
+			window.addch(offy - old_pos[1], offx + old_pos[0], ch)
+			window.addch(offy - ant_pos[1], offx + ant_pos[0], dir_char[ant_dir])
 			window.refresh()
 		except:
 			window.addstr(0, 0, 'Langton\'s Ant hit a brick wall :-)')
 			window.addstr(1, 0, '')
+			curses.curs_set(1)
 			window.refresh()
+			# Don't use curses.endwin() because it clears the screen.
 			break
 	else:
 		print(old_pos, old_colour, ant_pos, dir_char[ant_dir])
