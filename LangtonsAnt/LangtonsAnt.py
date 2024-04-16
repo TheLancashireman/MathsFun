@@ -93,20 +93,29 @@ if use_curses:
 	window.refresh()
 
 if presets_file != None:
-	f = open(presets_file, 'r')
-	for l in f:
-		l = l.rstrip().lstrip()
-		if l == '' or l[0] == '#':
-			pass	# Ignore comment lines and blank lines
-		else:
-			coords = l.split(' ')
-			pos = (int(coords[0]), int(coords[1]))
-#			print('pos = ', pos)		#DEBUG
-			grid[pos] = True
-			if use_curses:
-				window.addch(offy - pos[1], offx + pos[0], '*')
-				window.refresh()
-	f.close()
+	if presets_file[0:6] == 'block-':
+		size = int(presets_file[6:])
+		for x in range(-size, size+1):
+			for y in range(-size, size+1):
+				grid[(x, y)] = True
+				if use_curses:
+					window.addch(offy - y, offx + x, '*')
+					window.refresh()
+	else:
+		f = open(presets_file, 'r')
+		for l in f:
+			l = l.rstrip().lstrip()
+			if l == '' or l[0] == '#':
+				pass	# Ignore comment lines and blank lines
+			else:
+				coords = l.split(' ')
+				pos = (int(coords[0]), int(coords[1]))
+#				print('pos = ', pos)		#DEBUG
+				grid[pos] = True
+				if use_curses:
+					window.addch(offy - pos[1], offx + pos[0], '*')
+					window.refresh()
+		f.close()
 	time.sleep(1)
 
 
