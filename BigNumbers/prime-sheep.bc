@@ -1,0 +1,53 @@
+#!/usr/bin/bc
+
+/*
+ * (c) David Haworth
+ *
+ * This file is part of MathsFun.
+ *
+ * MathsFun is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MathsFun is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MathsFun.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/* Do Androids Dream Of Electric Sheep?
+ *
+ * Yes, but apparently only of prime sheep
+*/
+
+nprimes=2
+primes[0]=2
+primes[1]=3
+print 2, "\n"
+print 3, "\n"
+n=5
+while (1)
+{
+	sqrtn = sqrt(n)
+	isprime = 1
+	for (i = 1; primes[i] <= sqrtn; i++)
+	{
+		if ( ((n / primes[i]) * primes[i]) == n )
+		{
+			isprime = 0
+			break
+		}
+	}
+
+	if ( isprime )
+	{
+		primes[nprimes] = n
+		nprimes+=1
+		print n, "\n"
+	}
+	n+=2
+}

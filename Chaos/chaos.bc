@@ -1,0 +1,61 @@
+#!/usr/bin/bc
+
+/*
+ * (c) David Haworth
+ *
+ * This file is part of MathsFun.
+ *
+ * MathsFun is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MathsFun is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MathsFun.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/* Infinite chaostron
+*/
+
+scale = 100;
+r = 3.01;
+x[0] = 0;
+x[1] = .6677740863787375415282392026
+/* .6677740863787375415282392026578073089700 */
+n = 0;
+n0 = 0;
+diff = 1;
+tol = 0.0000000000000000000000000000001
+
+print n, ", ", x[1], "\n";
+
+while ( ( diff > tol ) )
+{
+	n+=1;
+	n0+=1;
+
+	x[0] = x[1];
+
+	x[1] = r * x[0] * ( 1 - x[0] );
+
+	if ( n0 >= 10000 )
+	{
+		print n, ", ", x[0], ", ", x[1], "\n";
+		n0 = 0;
+	}
+
+	if ( x[0] >= x[1] )
+	{
+		diff = x[0] - x[1];
+	} else
+	{
+		diff = x[1] - x[0];
+	}
+}
+
+halt;

@@ -1,0 +1,50 @@
+#!/usr/bin/bc
+
+/*
+ * (c) David Haworth
+ *
+ * This file is part of MathsFun.
+ *
+ * MathsFun is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MathsFun is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MathsFun.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/* Son of Fibonacci
+ *
+ * This file defines the function fib(n).
+ * Run the program, then type fib(42)  (for example)
+ * You can calculate as many fibonacci numbers as you like. When you've finished, type quit.
+*/
+
+
+define fib(n) {
+	ff[0]=1
+	ff[1]=1
+
+	if ( n < 3 )
+	{
+		f = ff[n-1]
+	} else {
+		i = 3
+
+		while ( i <= n )
+		{
+			f = ff[0] + ff[1]
+			ff[0] = ff[1]
+			ff[1] = f
+			i += 1
+		}
+	}
+
+	return (f)
+}
